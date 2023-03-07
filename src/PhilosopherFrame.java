@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 
 public class PhilosopherFrame {
     private JFrame frame;
@@ -63,8 +64,15 @@ public class PhilosopherFrame {
         for(int i = 0; i < 20; i++) {
             for(int j = 0; j < seats.length; j++) {
                 if(seats[j] == i) {
-                    JLabel picLabel = new JLabel(new ImageIcon(philosophers.get(j).getImage()));
-                    philosopherView.add(picLabel);
+                    JPanel philosopherPanel = new JPanel(new BorderLayout());
+                    JLabel picLabel = new JLabel(new ImageIcon(this.philosophers.get(j).getImage()), SwingConstants.CENTER);
+                    JLabel nameLabel = new JLabel(this.philosophers.get(j).getPhilosopher().getName(), SwingConstants.CENTER);
+                    JLabel statusLabel = new JLabel(this.philosophers.get(j).getPhilosopher().getStatus().name(), SwingConstants.CENTER);
+                    philosopherPanel.add(picLabel, BorderLayout.CENTER);
+                    philosopherPanel.add(nameLabel, BorderLayout.NORTH);
+                    philosopherPanel.add(statusLabel, BorderLayout.SOUTH);
+
+                    philosopherView.add(philosopherPanel);
                     break;
                 } else if(j == seats.length - 1) {
                     philosopherView.add(new JPanel());
@@ -89,7 +97,7 @@ public class PhilosopherFrame {
 
         this.frame.setTitle("Dining Philosophers");
         this.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.frame.setSize(500, 480);
+        this.frame.setSize(700, 900);
         this.frame.setLocationRelativeTo(null); //null centers the frame on the screen
         this.frame.setLayout(new BorderLayout());
     }
