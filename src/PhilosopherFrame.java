@@ -1,9 +1,12 @@
 import java.awt.Color;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -11,56 +14,109 @@ import javax.swing.JTextArea;
 
 public class PhilosopherFrame {
     private JFrame frame;
+    //main containers
+    private JPanel control;
+    private JScrollPane log;
+    //Control panel
+    private JPanel playControls;
+    private JButton playButton, resetButton, pauseButton;
+    private JLabel ticksText;
+    private JSpinner tickSpinner;
+    private JPanel dinnerControls;
+    private JButton semaphorButton, monitorButton;
+    //Log pane
+    private JTextArea logMessages;
+    //Philosopher panel
+    
 
     public PhilosopherFrame() {
-        this.frame = new JFrame();
         initalize();
     }
 
     private void initalize() {
-        frame.setTitle("Dining Philosophers");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setSize(500, 480);
-        frame.setLocationRelativeTo(null); //Null centers the frame on the screen
-        frame.setLayout(new BorderLayout());
-        
-        //Control Panel
-        JPanel control = new JPanel(new BorderLayout());
-        control.setBackground(Color.GREEN);
+        frameInitialize();
 
-        JPanel playControls = new JPanel();
-        JSpinner ticks = new JSpinner();
-        ticks.setValue(5);
-        playControls.setBackground(Color.RED);
-        playControls.add(new JButton("Play"));
-        playControls.add(new JButton("Stop"));
-        playControls.add(new JButton("Pause"));
-        playControls.add(new JTextArea("Ticks/s:"));
-        playControls.add(ticks);
-        control.add(playControls, BorderLayout.NORTH);
+        controlPanelInitialize();
+        this.frame.add(control, BorderLayout.SOUTH);
 
-        JPanel dinnerControls = new JPanel();
-        dinnerControls.setBackground(Color.BLUE);
-        dinnerControls.add(new JButton("Semaphore Dinner"));
-        dinnerControls.add(new JButton("Monitor Dinner"));
-        control.add(dinnerControls, BorderLayout.SOUTH);
-        
-        frame.add(control, BorderLayout.SOUTH);
+        logPaneInitialize();
+        this.frame.add(log, BorderLayout.EAST);
 
-        //Log Panel
-        
-        
-        JTextArea logMessages = new JTextArea("Philosopher Log");
-        logMessages.setEditable(false);
-        JScrollPane log = new JScrollPane(logMessages, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        log.setBackground(Color.DARK_GRAY);
+        JPanel philosopherView = new JPanel(new GridLayout(4, 5));
+        for(int i = 0; i < 20; i++) {
+            philosopherView.add(new JButton(String.valueOf(i)));
+        }
+        this.frame.add(philosopherView, BorderLayout.CENTER);
 
-        frame.add(log, BorderLayout.EAST);
+        this.frame.setVisible(true);
 
-        frame.setVisible(true);
         for(int i = 0; i < 25; i++) {
-            logMessages.append("\nmessage " + String.valueOf(i));
+            addLogMessage("message " + String.valueOf(i));
         }
         
+    }
+
+    private void frameInitialize() {
+        this.frame = new JFrame();
+
+        this.frame.setTitle("Dining Philosophers");
+        this.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.frame.setSize(500, 480);
+        this.frame.setLocationRelativeTo(null); //null centers the frame on the screen
+        this.frame.setLayout(new BorderLayout());
+    }
+
+    private void controlPanelInitialize() {
+        this.control = new JPanel(new BorderLayout());
+        this.control.setBackground(Color.LIGHT_GRAY);
+
+        //Play Controls
+        String pause= "⏸"; //\u23f8
+        String play = "▶️"; //\u23f5
+        String reset = "⏮"; //\u23ee
+
+        this.playControls = new JPanel();
+        this.tickSpinner = new JSpinner();
+        this.tickSpinner.setValue(5);
+        this.playControls.setBackground(Color.LIGHT_GRAY);
+        this.playButton = new JButton(play);
+        this.pauseButton = new JButton(pause);
+        this.resetButton = new JButton(reset);
+        this.playControls.add(this.playButton);
+        this.playControls.add(this.pauseButton);
+        this.playControls.add(this.resetButton);
+        this.ticksText = new JLabel("Ticks/s:");
+        this.playControls.add(this.ticksText);
+        this.playControls.add(this.tickSpinner);
+
+        this.control.add(playControls, BorderLayout.NORTH);
+
+        //Diner Controls
+        this.dinnerControls = new JPanel();
+        this.semaphorButton = new JButton("Semaphore Dinner");
+        this.monitorButton = new JButton("Monitor Dinner");
+        this.dinnerControls.setBackground(Color.LIGHT_GRAY);
+        this.dinnerControls.add(this.semaphorButton);
+        this.dinnerControls.add(this.monitorButton);
+
+        this.control.add(this.dinnerControls, BorderLayout.SOUTH);
+    }
+
+    private void logPaneInitialize() {
+        this.logMessages = new JTextArea("Philosopher Log");
+        this.logMessages.setEditable(false);
+        this.logMessages.setBackground(Color.DARK_GRAY);
+        this.logMessages.setSelectedTextColor(Color.BLACK);
+        this.logMessages.setForeground(Color.LIGHT_GRAY);
+        this.logMessages.setBorder(BorderFactory.createCompoundBorder(
+        this.logMessages.getBorder(), 
+        BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+        this.log = new JScrollPane(this.logMessages, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        this.log.setBackground(Color.LIGHT_GRAY);
+        this.log.setBorder(null);
+    }
+
+    public void addLogMessage(String msg) {
+        this.logMessages.append("\n" + msg);
     }
 }

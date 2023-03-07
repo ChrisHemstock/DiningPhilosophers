@@ -1,5 +1,11 @@
 public class Philosopher {
     private String name;
+    //Top 5 names
+    //1) Aristotle
+    //2) Diogenes
+    //3) Plato
+    //4) Socrates
+    //5) Epicurius
     private PhilosopherStatus status;
 
     private enum PhilosopherStatus {
