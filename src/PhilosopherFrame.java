@@ -20,6 +20,7 @@ public class PhilosopherFrame {
     //main containers
     private JPanel control;
     private JScrollPane log;
+    private JPanel philosopherView;
     //Control panel
     private JPanel playControls;
     private JButton playButton, resetButton, pauseButton;
@@ -59,37 +60,14 @@ public class PhilosopherFrame {
         logPaneInitialize();
         this.frame.add(log, BorderLayout.EAST);
 
-        JPanel philosopherView = new JPanel(new GridLayout(4, 5));
-        int[] seats = {2, 5, 9, 16, 18};
-        for(int i = 0; i < 20; i++) {
-            for(int j = 0; j < seats.length; j++) {
-                if(seats[j] == i) {
-                    JPanel philosopherPanel = new JPanel(new BorderLayout());
-                    JLabel picLabel = new JLabel(new ImageIcon(this.philosophers.get(j).getImage()), SwingConstants.CENTER);
-                    JLabel nameLabel = new JLabel(this.philosophers.get(j).getPhilosopher().getName(), SwingConstants.CENTER);
-                    JLabel statusLabel = new JLabel(this.philosophers.get(j).getPhilosopher().getStatus().name(), SwingConstants.CENTER);
-                    philosopherPanel.add(picLabel, BorderLayout.CENTER);
-                    philosopherPanel.add(nameLabel, BorderLayout.NORTH);
-                    philosopherPanel.add(statusLabel, BorderLayout.SOUTH);
-
-                    philosopherView.add(philosopherPanel);
-                    break;
-                } else if(j == seats.length - 1) {
-                    philosopherView.add(new JPanel());
-                }
-            }
-        }
-
-
-
-        this.frame.add(philosopherView, BorderLayout.CENTER);
+        philosopherPanelInitialize();
+        this.frame.add(this.philosopherView, BorderLayout.CENTER);
 
         this.frame.setVisible(true);
 
         for(int i = 0; i < 25; i++) {
             addLogMessage("message " + String.valueOf(i));
         }
-        
     }
 
     private void frameInitialize() {
@@ -150,6 +128,29 @@ public class PhilosopherFrame {
         this.log = new JScrollPane(this.logMessages, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.log.setBackground(Color.LIGHT_GRAY);
         this.log.setBorder(null);
+    }
+
+    private void philosopherPanelInitialize() {
+        this.philosopherView = new JPanel(new GridLayout(4, 5));
+        int[] seats = {2, 5, 9, 16, 18};
+        for(int i = 0; i < 20; i++) {
+            for(int j = 0; j < seats.length; j++) {
+                if(seats[j] == i) {
+                    JPanel philosopherPanel = new JPanel(new BorderLayout());
+                    JLabel picLabel = new JLabel(new ImageIcon(this.philosophers.get(j).getImage()), SwingConstants.CENTER);
+                    JLabel nameLabel = new JLabel(this.philosophers.get(j).getPhilosopher().getName(), SwingConstants.CENTER);
+                    JLabel statusLabel = new JLabel(this.philosophers.get(j).getPhilosopher().getStatus().name(), SwingConstants.CENTER);
+                    philosopherPanel.add(picLabel, BorderLayout.CENTER);
+                    philosopherPanel.add(nameLabel, BorderLayout.NORTH);
+                    philosopherPanel.add(statusLabel, BorderLayout.SOUTH);
+
+                    philosopherView.add(philosopherPanel);
+                    break;
+                } else if(j == seats.length - 1) {
+                    philosopherView.add(new JPanel());
+                }
+            }
+        }
     }
 
     public void addLogMessage(String msg) {
