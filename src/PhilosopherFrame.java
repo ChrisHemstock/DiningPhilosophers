@@ -31,18 +31,18 @@ public class PhilosopherFrame {
     //Log pane
     private JTextArea logMessages;
     //Philosopher panel
-    private ArrayList<DisplayPhilosopher> philosophers;
+    private ArrayList<PhilosopherPanel> philosophers;
     
 
     public PhilosopherFrame() {
         try {
-            this.philosophers = new ArrayList<DisplayPhilosopher>();
+            this.philosophers = new ArrayList<PhilosopherPanel>();
 
-            philosophers.add(new DisplayPhilosopher("Plato"));
-            philosophers.add(new DisplayPhilosopher("Socrates"));
-            philosophers.add(new DisplayPhilosopher("Aristotle"));
-            philosophers.add(new DisplayPhilosopher("Diogenese"));
-            philosophers.add(new DisplayPhilosopher("Epechurius"));
+            philosophers.add(new PhilosopherPanel("Plato"));
+            philosophers.add(new PhilosopherPanel("Socrates"));
+            philosophers.add(new PhilosopherPanel("Aristotle"));
+            philosophers.add(new PhilosopherPanel("Diogenese"));
+            philosophers.add(new PhilosopherPanel("Epechurius"));
             
             initalize();
         } catch (Exception e) {
@@ -136,15 +136,7 @@ public class PhilosopherFrame {
         for(int i = 0; i < 20; i++) {
             for(int j = 0; j < seats.length; j++) {
                 if(seats[j] == i) {
-                    JPanel philosopherPanel = new JPanel(new BorderLayout());
-                    JLabel picLabel = new JLabel(new ImageIcon(this.philosophers.get(j).getImage()), SwingConstants.CENTER);
-                    JLabel nameLabel = new JLabel(this.philosophers.get(j).getPhilosopher().getName(), SwingConstants.CENTER);
-                    JLabel statusLabel = new JLabel(this.philosophers.get(j).getPhilosopher().getStatus().name(), SwingConstants.CENTER);
-                    philosopherPanel.add(picLabel, BorderLayout.CENTER);
-                    philosopherPanel.add(nameLabel, BorderLayout.NORTH);
-                    philosopherPanel.add(statusLabel, BorderLayout.SOUTH);
-
-                    philosopherView.add(philosopherPanel);
+                    philosopherView.add(this.philosophers.get(j));
                     break;
                 } else if(j == seats.length - 1) {
                     philosopherView.add(new JPanel());
