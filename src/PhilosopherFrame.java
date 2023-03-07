@@ -1,9 +1,11 @@
 import java.awt.Color;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,10 +29,24 @@ public class PhilosopherFrame {
     //Log pane
     private JTextArea logMessages;
     //Philosopher panel
+    private ArrayList<DisplayPhilosopher> philosophers;
     
 
     public PhilosopherFrame() {
-        initalize();
+        try {
+            this.philosophers = new ArrayList<DisplayPhilosopher>();
+
+            philosophers.add(new DisplayPhilosopher("Plato"));
+            philosophers.add(new DisplayPhilosopher("Socrates"));
+            philosophers.add(new DisplayPhilosopher("Aristotle"));
+            philosophers.add(new DisplayPhilosopher("Diogenese"));
+            philosophers.add(new DisplayPhilosopher("Epechurius"));
+            
+            initalize();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
     }
 
     private void initalize() {
@@ -43,9 +59,21 @@ public class PhilosopherFrame {
         this.frame.add(log, BorderLayout.EAST);
 
         JPanel philosopherView = new JPanel(new GridLayout(4, 5));
+        int[] seats = {2, 5, 9, 16, 18};
         for(int i = 0; i < 20; i++) {
-            philosopherView.add(new JButton(String.valueOf(i)));
+            for(int j = 0; j < seats.length; j++) {
+                if(seats[j] == i) {
+                    JLabel picLabel = new JLabel(new ImageIcon(philosophers.get(j).getImage()));
+                    philosopherView.add(picLabel);
+                    break;
+                } else if(j == seats.length - 1) {
+                    philosopherView.add(new JPanel());
+                }
+            }
         }
+
+
+
         this.frame.add(philosopherView, BorderLayout.CENTER);
 
         this.frame.setVisible(true);

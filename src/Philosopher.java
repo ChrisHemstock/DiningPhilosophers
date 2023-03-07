@@ -1,3 +1,9 @@
+enum PhilosopherStatus {
+    EATING,
+    THINKING,
+    HUNGRY;
+};
+    
 public class Philosopher {
     private String name;
     //Top 5 names
@@ -8,11 +14,7 @@ public class Philosopher {
     //5) Epicurius
     private PhilosopherStatus status;
 
-    private enum PhilosopherStatus {
-        EATING,
-        THINKING,
-        HUNGRY;
-    };
+    
 
     public Philosopher(String name) {
         setName(name);
