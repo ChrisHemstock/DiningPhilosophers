@@ -36,17 +36,20 @@ public class PhilosopherFrame {
         try {
             this.philosophers = new ArrayList<PhilosopherPanel>();
 
+            //Create PhilosopherPanels and add them to the list
             philosophers.add(new PhilosopherPanel("Plato"));
             philosophers.add(new PhilosopherPanel("Socrates"));
             philosophers.add(new PhilosopherPanel("Aristotle"));
-            philosophers.add(new PhilosopherPanel("Diogenese"));
-            philosophers.add(new PhilosopherPanel("Epechurius"));
+            philosophers.add(new PhilosopherPanel("Diogenes"));
+            philosophers.add(new PhilosopherPanel("Epicurus"));
             
             initalize();
+            for (PhilosopherPanel philosopher : philosophers) {
+                philosopher.startThread();
+            }
         } catch (Exception e) {
             System.out.println(e);
         }
-        
     }
 
     private void initalize() {
@@ -83,9 +86,9 @@ public class PhilosopherFrame {
         this.control.setBackground(Color.LIGHT_GRAY);
 
         //Play Controls
-        String pause= "⏸"; //\u23f8
-        String play = "▶️"; //\u23f5
-        String reset = "⏮"; //\u23ee
+        String pause= "Pause"; //\u23f8
+        String play = "Play"; //\u23f5
+        String reset = "Reset"; //\u23ee
 
         this.playControls = new JPanel();
         this.tickSpinner = new JSpinner();

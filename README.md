@@ -8,7 +8,7 @@
 - Don’t worry about imposing constraints and validation to the problem at this point. For example, it is okay for the interface to allow two philosophers next to each other to eat at the same time.
 - Don’t worry about concurrency at this point.
 
-## 2. Create a SemaphoneDinner and a MonitorDinner class. The former will be a solution to the problem using Semaphores only, the latter will be a solution using Monitors only (async. methods). Both solutions should be based on Fig. 2-47 from the book.
+## 2. Create a SemaphoneDinner and a MonitorDinner class. The former will be a solution to the problem using Semaphores only, the latter will be a solution using Monitors only (async. methods). Both solutions should be based on Fig. 2-47 (pg 170) from the book.
 - Any of the two solutions should have a method tick(). Every time tick is called all philosophers should be able to think or to attempt to eat.
 - A philosopher has a name, and thinks and eats for a random number of ticks between 1 and 15. For example, a philosopher Cardi B may start thinking for 6 ticks, then attempt to eat. Unfortunately for Cardi B, one of her neighbors is eating, so she is not able to eat for the next 10 ticks. Eventually, Cardi B’s neighbor finishes eating, so she starts to eat, finishing in 3 more ticks. Once done eating, Cardi B goes back to think for a random number of ticks, and so on.
 - A simulation that is running will continue to call the method tick() from the current solution until its paused. The method will be called according to the number of ticks per second defined by the user.
