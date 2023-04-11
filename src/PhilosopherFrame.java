@@ -3,6 +3,8 @@ import java.awt.Color;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -44,9 +46,6 @@ public class PhilosopherFrame {
             philosophers.add(new PhilosopherPanel("Epicurus"));
             
             initalize();
-            for (PhilosopherPanel philosopher : philosophers) {
-                philosopher.startThread();
-            }
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -95,6 +94,14 @@ public class PhilosopherFrame {
         this.tickSpinner.setValue(5);
         this.playControls.setBackground(Color.LIGHT_GRAY);
         this.playButton = new JButton(play);
+        this.playButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (PhilosopherPanel philosopher : philosophers) {
+                    philosopher.startThread();
+                }
+            }
+        });
         this.pauseButton = new JButton(pause);
         this.resetButton = new JButton(reset);
         this.playControls.add(this.playButton);

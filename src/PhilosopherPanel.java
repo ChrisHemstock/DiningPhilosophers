@@ -27,27 +27,6 @@ public class PhilosopherPanel extends JPanel implements PhilosopherObserver {
         this.thread = new Thread(this.philosopher);
     }
 
-    private BufferedImage getImageIcon() throws IOException {
-        PhilosopherStatus status = this.philosopher.getStatus();
-        BufferedImage image;
-        System.out.println("Picture Change");
-        
-        switch(status) {
-            case EATING:
-                image = ImageIO.read(new File("img/PhilosopherEating.png"));
-                break;
-            case HUNGRY:
-                image = ImageIO.read(new File("img/PhilosopherHungry.png"));
-                break;
-            case THINKING:
-                image = ImageIO.read(new File("img/PhilosopherThinking.png"));
-                break;
-            default:
-                throw new IOException();
-        }
-        return image;
-    }
-
     private void setPictureLabel() throws IOException {
         PhilosopherStatus status = this.philosopher.getStatus();
         BufferedImage image;
@@ -66,14 +45,6 @@ public class PhilosopherPanel extends JPanel implements PhilosopherObserver {
             default:
                 throw new IOException();
         }
-        this.pictureLabel = new JLabel(new ImageIcon(image), SwingConstants.CENTER);
-        this.add(this.pictureLabel, BorderLayout.CENTER);
-    }
-
-    private void updateImageLabel() throws IOException {
-        BufferedImage image = getImageIcon();
-        BorderLayout layout = (BorderLayout)this.getLayout();
-        this.remove(layout.getLayoutComponent(BorderLayout.CENTER));
         this.pictureLabel = new JLabel(new ImageIcon(image), SwingConstants.CENTER);
         this.add(this.pictureLabel, BorderLayout.CENTER);
     }

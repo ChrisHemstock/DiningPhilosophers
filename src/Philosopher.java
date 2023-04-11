@@ -1,5 +1,3 @@
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Random;
  
 enum PhilosopherStatus {
@@ -20,7 +18,7 @@ public class Philosopher implements Runnable {
         setName(name);
         setStatus(PhilosopherStatus.THINKING);
         setRemainingTicks(new Random().nextInt(15));
-        setMsPerTick(100);
+        setMsPerTick(500);
 
     }
 
@@ -87,7 +85,6 @@ public class Philosopher implements Runnable {
 
     public void tick() {
         this.setRemainingTicks(this.getRemainingTicks() - 1);
-        System.out.println("tick" + String.valueOf(getRemainingTicks()));
         if(this.getRemainingTicks() <= 0) {
             this.setNextStatus();
         }
@@ -96,7 +93,6 @@ public class Philosopher implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("philosopher print");
         long before = System.currentTimeMillis();
         while(true) {
             long time = System.currentTimeMillis() - before;
