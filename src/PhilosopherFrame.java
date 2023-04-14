@@ -105,7 +105,7 @@ public class PhilosopherFrame {
     }
 
     private void logPaneInitialize() {
-        this.logMessages = new JTextArea("Philosopher Log\n");
+        this.logMessages = new JTextArea("Philosopher Log       \n");
         this.logMessages.setEditable(false);
         this.logMessages.setBackground(Color.DARK_GRAY);
         this.logMessages.setSelectedTextColor(Color.BLACK);

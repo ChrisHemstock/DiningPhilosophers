@@ -6,7 +6,7 @@ public class Main {
 
             @Override
             public void run() {
-                PhilosopherFrame frame = new PhilosopherFrame();
+                new PhilosopherFrame();
             }
             
         });
