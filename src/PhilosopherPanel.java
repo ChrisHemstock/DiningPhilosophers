@@ -43,7 +43,6 @@ public class PhilosopherPanel extends JPanel implements PhilosopherObserver {
     private void setPictureLabel() throws IOException {
         PhilosopherStatus status = this.philosopher.getStatus();
         BufferedImage image;
-        System.out.println("Picture Change");
         
         switch(status) {
             case EATING:

@@ -31,11 +31,10 @@ public class Philosopher implements Runnable {
     }
 
     public void setStatus(PhilosopherStatus status) {
+        this.status = status;
         if(observer != null) {
             observer.notifyStatusChange(status);
         }
-        
-        this.status = status;
     }
 
     public String getName() {
@@ -59,14 +58,11 @@ public class Philosopher implements Runnable {
         Random rand = new Random();
         if(this.status == PhilosopherStatus.EATING) {
             this.setStatus(PhilosopherStatus.THINKING);
-            System.out.println("status changed to thinking");
             this.setRemainingTicks(rand.nextInt(15));
         } else if(this.status == PhilosopherStatus.THINKING) {
-            System.out.println("status changed to hungry");
             this.setStatus(PhilosopherStatus.HUNGRY);
         } else {
             this.setStatus(PhilosopherStatus.EATING);
-            System.out.println("status changed to eating");
             this.setRemainingTicks(rand.nextInt(15));
         }
     }
