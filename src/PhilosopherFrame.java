@@ -77,10 +77,9 @@ public class PhilosopherFrame {
         this.playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                philosophers.get(0).startThread();
-                // for (PhilosopherPanel philosopher : philosophers) {
-                //     philosopher.startThread();
-                // }
+                for (PhilosopherPanel philosopher : philosophers) {
+                    philosopher.startThread();
+                }
             }
         });
         this.pauseButton = new JButton(pause);
