@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -35,23 +36,6 @@ public class PhilosopherFrame {
     
 
     public PhilosopherFrame() {
-        try {
-            this.philosophers = new ArrayList<PhilosopherPanel>();
-
-            //Create PhilosopherPanels and add them to the list
-            philosophers.add(new PhilosopherPanel("Plato"));
-            philosophers.add(new PhilosopherPanel("Socrates"));
-            philosophers.add(new PhilosopherPanel("Aristotle"));
-            philosophers.add(new PhilosopherPanel("Diogenes"));
-            philosophers.add(new PhilosopherPanel("Epicurus"));
-            
-            initalize();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-
-    private void initalize() {
         frameInitialize();
 
         controlPanelInitialize();
@@ -64,17 +48,13 @@ public class PhilosopherFrame {
         this.frame.add(this.philosopherView, BorderLayout.CENTER);
 
         this.frame.setVisible(true);
-
-        for(int i = 0; i < 25; i++) {
-            addLogMessage("message " + String.valueOf(i));
-        }
     }
 
     private void frameInitialize() {
         this.frame = new JFrame();
 
         this.frame.setTitle("Dining Philosophers");
-        this.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setSize(700, 900);
         this.frame.setLocationRelativeTo(null); //null centers the frame on the screen
         this.frame.setLayout(new BorderLayout());
@@ -125,20 +105,34 @@ public class PhilosopherFrame {
     }
 
     private void logPaneInitialize() {
-        this.logMessages = new JTextArea("Philosopher Log");
+        this.logMessages = new JTextArea("Philosopher Log\n");
         this.logMessages.setEditable(false);
         this.logMessages.setBackground(Color.DARK_GRAY);
         this.logMessages.setSelectedTextColor(Color.BLACK);
         this.logMessages.setForeground(Color.LIGHT_GRAY);
         this.logMessages.setBorder(BorderFactory.createCompoundBorder(
-        this.logMessages.getBorder(), 
-        BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+            this.logMessages.getBorder(), 
+            BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
+
         this.log = new JScrollPane(this.logMessages, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.log.setBackground(Color.LIGHT_GRAY);
         this.log.setBorder(null);
     }
 
     private void philosopherPanelInitialize() {
+        //Create PhilosopherPanels and add them to the list
+        try {
+            this.philosophers = new ArrayList<PhilosopherPanel>();
+            philosophers.add(new PhilosopherPanel("Plato", this.logMessages));
+            philosophers.add(new PhilosopherPanel("Socrates", this.logMessages));
+            philosophers.add(new PhilosopherPanel("Aristotle", this.logMessages));
+            philosophers.add(new PhilosopherPanel("Diogenes", this.logMessages));
+            philosophers.add(new PhilosopherPanel("Epicurus", this.logMessages));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
         this.philosopherView = new JPanel(new GridLayout(4, 5));
         int[] seats = {2, 5, 9, 16, 18};
         for(int i = 0; i < 20; i++) {
@@ -151,9 +145,5 @@ public class PhilosopherFrame {
                 }
             }
         }
-    }
-
-    public void addLogMessage(String msg) {
-        this.logMessages.append("\n" + msg);
     }
 }

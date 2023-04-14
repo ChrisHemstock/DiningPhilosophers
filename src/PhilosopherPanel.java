@@ -6,6 +6,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 
@@ -15,16 +16,28 @@ public class PhilosopherPanel extends JPanel implements PhilosopherObserver {
     private JLabel pictureLabel;
     private JLabel nameLabel;
     private JLabel statusLabel;
+    private JTextArea log;
 
 
-    public PhilosopherPanel(String name) throws IOException {
+    
+
+    public PhilosopherPanel(String name, JTextArea log) throws IOException {
         super(new BorderLayout());
         this.philosopher = new Philosopher(name);
         this.philosopher.setObserver(this);
         setPictureLabel();
         setNameLabel();
         setStatusLabel();
+        setLog(log);
         this.thread = new Thread(this.philosopher);
+    }
+
+    public JTextArea getLog() {
+        return log;
+    }
+
+    public void setLog(JTextArea log) {
+        this.log = log;
     }
 
     private void setPictureLabel() throws IOException {
@@ -60,7 +73,12 @@ public class PhilosopherPanel extends JPanel implements PhilosopherObserver {
     }
 
     public void setStatusLabel() {
-        this.statusLabel = new JLabel(this.philosopher.getStatus().name(), SwingConstants.CENTER);
+        String status = this.philosopher.getStatus().name();
+        String name = this.philosopher.getName();
+
+        this.addLogMessage(name + ": " + status);
+
+        this.statusLabel = new JLabel(status, SwingConstants.CENTER);
         this.add(this.statusLabel, BorderLayout.SOUTH);
     }
 
@@ -91,6 +109,14 @@ public class PhilosopherPanel extends JPanel implements PhilosopherObserver {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        }
+    }
+
+    public void addLogMessage(String msg) {
+        try {
+            this.getLog().append(msg + "\n");
+        } catch (Exception e) {
+            // TODO: handle exception
         }
     }
 }
