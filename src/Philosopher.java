@@ -1,3 +1,4 @@
+import java.time.zone.ZoneOffsetTransitionRule.TimeDefinition;
 import java.util.Random;
  
 enum PhilosopherStatus {
@@ -92,6 +93,7 @@ public class Philosopher implements Runnable {
         long before = System.currentTimeMillis();
         while(true) {
             long time = System.currentTimeMillis() - before;
+            String check = time + ": " + this.getMsPerTick(); //even though this does nothing it is necessary to update getMsPerTick()
             if(time > this.getMsPerTick()) {
                 before = System.currentTimeMillis();
                 tick();

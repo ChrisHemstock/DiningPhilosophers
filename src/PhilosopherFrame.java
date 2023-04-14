@@ -1,20 +1,24 @@
 import java.awt.Color;
-
+import java.awt.Dimension;
 import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.text.NumberFormatter;
 
 public class PhilosopherFrame {
     private JFrame frame;
@@ -27,6 +31,7 @@ public class PhilosopherFrame {
     private JButton playButton, resetButton, pauseButton;
     private JLabel ticksText;
     private JSpinner tickSpinner;
+    private JButton submitTicksButton;
     private JPanel dinnerControls;
     private JButton semaphorButton, monitorButton;
     //Log pane
@@ -60,20 +65,42 @@ public class PhilosopherFrame {
         this.frame.setLayout(new BorderLayout());
     }
 
+    private void tickSpinnerInitialize() {
+        final double value = 1.75;
+        final double minimum = 0.01;
+        final double maximum = 50.00;
+        final double stepSize = 0.25;
+        final int inputWidth = 50;
+
+        this.tickSpinner = new JSpinner();
+        this.ticksText = new JLabel("Ticks/s:");
+
+        // Set the model values
+        SpinnerNumberModel model = new SpinnerNumberModel(value, minimum, maximum, stepSize); 
+        this.tickSpinner.setModel(model);
+
+        // Set the demensions of the input box
+        Dimension prefSize = this.tickSpinner.getPreferredSize();
+        prefSize = new Dimension(inputWidth, prefSize.height);
+        this.tickSpinner.setPreferredSize(prefSize);
+
+        // Allow inputs to only be in the form 0.00 with no characters
+        JFormattedTextField txt = ((JSpinner.NumberEditor) this.tickSpinner.getEditor()).getTextField();
+        ((NumberFormatter) txt.getFormatter()).setAllowsInvalid(false);
+        NumberFormatter formatter = (NumberFormatter) txt.getFormatter();
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");         
+        formatter.setFormat(decimalFormat);         
+        formatter.setAllowsInvalid(false);
+    }
+
+
     private void controlPanelInitialize() {
         this.control = new JPanel(new BorderLayout());
         this.control.setBackground(Color.LIGHT_GRAY);
 
-        //Play Controls
-        String pause= "Pause"; //\u23f8
-        String play = "Play"; //\u23f5
-        String reset = "Reset"; //\u23ee
-
         this.playControls = new JPanel();
-        this.tickSpinner = new JSpinner();
-        this.tickSpinner.setValue(5);
-        this.playControls.setBackground(Color.LIGHT_GRAY);
-        this.playButton = new JButton(play);
+        
+        this.playButton = new JButton("Play");
         this.playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -82,24 +109,47 @@ public class PhilosopherFrame {
                 }
             }
         });
-        this.pauseButton = new JButton(pause);
-        this.resetButton = new JButton(reset);
+        this.pauseButton = new JButton("Pause");
+        this.resetButton = new JButton("Reset");
+        this.tickSpinnerInitialize();
+        this.submitTicksButton = new JButton("Apply Ticks");
+        this.submitTicksButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                double ticksPerSec = (double) tickSpinner.getValue(); // t/s => 
+                int msPerTick = (int) (1000 / ticksPerSec);
+                System.out.println(ticksPerSec);
+                System.out.println(msPerTick);
+
+                for (PhilosopherPanel philosopher : philosophers) {
+                    philosopher.getPhilosopher().setMsPerTick(msPerTick);
+                }
+            }
+            
+        });
+        
         this.playControls.add(this.playButton);
         this.playControls.add(this.pauseButton);
         this.playControls.add(this.resetButton);
-        this.ticksText = new JLabel("Ticks/s:");
         this.playControls.add(this.ticksText);
         this.playControls.add(this.tickSpinner);
+        this.playControls.add(this.submitTicksButton);
+        
+        this.playControls.setBackground(Color.LIGHT_GRAY);
 
         this.control.add(playControls, BorderLayout.NORTH);
 
         //Diner Controls
         this.dinnerControls = new JPanel();
+
         this.semaphorButton = new JButton("Semaphore Dinner");
         this.monitorButton = new JButton("Monitor Dinner");
-        this.dinnerControls.setBackground(Color.LIGHT_GRAY);
+
         this.dinnerControls.add(this.semaphorButton);
         this.dinnerControls.add(this.monitorButton);
+        
+        this.dinnerControls.setBackground(Color.LIGHT_GRAY);
 
         this.control.add(this.dinnerControls, BorderLayout.SOUTH);
     }
