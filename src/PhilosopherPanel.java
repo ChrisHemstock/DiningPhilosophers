@@ -21,9 +21,9 @@ public class PhilosopherPanel extends JPanel implements PhilosopherObserver {
 
     
 
-    public PhilosopherPanel(String name, JTextArea log) throws IOException {
+    public PhilosopherPanel(String name, JTextArea log, int index) throws IOException {
         super(new BorderLayout());
-        this.philosopher = new Philosopher(name);
+        this.philosopher = new Philosopher(name, index);
         this.philosopher.setObserver(this);
         setPictureLabel();
         setNameLabel();
@@ -38,6 +38,10 @@ public class PhilosopherPanel extends JPanel implements PhilosopherObserver {
 
     public void setLog(JTextArea log) {
         this.log = log;
+    }
+
+    public void setDinner(Dinner dinner) {
+        getPhilosopher().setDinner(dinner);
     }
 
     private void setPictureLabel() throws IOException {
@@ -91,6 +95,10 @@ public class PhilosopherPanel extends JPanel implements PhilosopherObserver {
 
     public void resetThread() {
 
+    }
+
+    public Thread getThread() {
+        return this.thread;
     }
 
     @Override

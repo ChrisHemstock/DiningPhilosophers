@@ -1,4 +1,3 @@
-import java.time.zone.ZoneOffsetTransitionRule.TimeDefinition;
 import java.util.Random;
  
 enum PhilosopherStatus {
@@ -10,21 +9,39 @@ enum PhilosopherStatus {
 public class Philosopher implements Runnable {
     private String name;
     private PhilosopherStatus status;
+    private int index;
     private int remainingTicks;
     private long msPerTick;
     private PhilosopherObserver observer;
+    private static Dinner dinner;
 
 
-    public Philosopher(String name) {
+    public Philosopher(String name, int index) {
         setName(name);
         setStatus(PhilosopherStatus.THINKING);
         setRemainingTicks(new Random().nextInt(15));
         setMsPerTick(500);
-
+        setIndex(index);
     }
 
     public void setObserver(PhilosopherObserver observer) {
         this.observer = observer;
+    }
+
+    public void setDinner(Dinner dinner) {
+        Philosopher.dinner = dinner;
+    }
+
+    public Dinner getDinner() {
+        return Philosopher.dinner;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public int getIndex() {
+        return this.index;
     }
 
     public PhilosopherStatus getStatus() {
@@ -62,7 +79,7 @@ public class Philosopher implements Runnable {
             this.setRemainingTicks(rand.nextInt(15));
         } else if(this.status == PhilosopherStatus.THINKING) {
             this.setStatus(PhilosopherStatus.HUNGRY);
-        } else {
+            this.getDinner().takeForks(this.getIndex());
             this.setStatus(PhilosopherStatus.EATING);
             this.setRemainingTicks(rand.nextInt(15));
         }
@@ -93,7 +110,7 @@ public class Philosopher implements Runnable {
         long before = System.currentTimeMillis();
         while(true) {
             long time = System.currentTimeMillis() - before;
-            String check = time + ": " + this.getMsPerTick(); //even though this does nothing it is necessary to update getMsPerTick()
+            String check = time + ": " + this.getMsPerTick(); //even though this does nothing it is necessary to prevent getMsPerTick() from being cached
             if(time > this.getMsPerTick()) {
                 before = System.currentTimeMillis();
                 tick();

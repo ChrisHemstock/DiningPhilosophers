@@ -38,6 +38,7 @@ public class PhilosopherFrame {
     private JTextArea logMessages;
     //Philosopher panel
     private ArrayList<PhilosopherPanel> philosophers;
+    private Dinner dinner;
     
 
     public PhilosopherFrame() {
@@ -104,9 +105,7 @@ public class PhilosopherFrame {
         this.playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (PhilosopherPanel philosopher : philosophers) {
-                    philosopher.startThread();
-                }
+                getDinner().start();
             }
         });
         this.pauseButton = new JButton("Pause");
@@ -144,8 +143,21 @@ public class PhilosopherFrame {
         this.dinnerControls = new JPanel();
 
         this.semaphorButton = new JButton("Semaphore Dinner");
-        this.monitorButton = new JButton("Monitor Dinner");
+        this.semaphorButton.addActionListener(new ActionListener() {
 
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setDinner(new SemaphoreDinner(philosophers));
+            }
+        });
+        this.monitorButton = new JButton("Monitor Dinner");
+        this.monitorButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setDinner(new MonitorDinner(philosophers));
+            }
+        });
         this.dinnerControls.add(this.semaphorButton);
         this.dinnerControls.add(this.monitorButton);
         
@@ -170,15 +182,25 @@ public class PhilosopherFrame {
         this.log.setBorder(null);
     }
 
+    public void setDinner(Dinner dinner) {
+        this.dinner = dinner;
+        this.philosophers.get(0).setDinner(dinner);
+    }
+
+    public Dinner getDinner() {
+        return this.dinner;
+    }
+
     private void philosopherPanelInitialize() {
         //Create PhilosopherPanels and add them to the list
         try {
             this.philosophers = new ArrayList<PhilosopherPanel>();
-            philosophers.add(new PhilosopherPanel("Plato", this.logMessages));
-            philosophers.add(new PhilosopherPanel("Socrates", this.logMessages));
-            philosophers.add(new PhilosopherPanel("Aristotle", this.logMessages));
-            philosophers.add(new PhilosopherPanel("Diogenes", this.logMessages));
-            philosophers.add(new PhilosopherPanel("Epicurus", this.logMessages));
+            philosophers.add(new PhilosopherPanel("Plato", this.logMessages, 0));
+            philosophers.add(new PhilosopherPanel("Socrates", this.logMessages, 1));
+            philosophers.add(new PhilosopherPanel("Aristotle", this.logMessages, 2));
+            philosophers.add(new PhilosopherPanel("Diogenes", this.logMessages, 3));
+            philosophers.add(new PhilosopherPanel("Epicurus", this.logMessages, 4));
+            setDinner(new SemaphoreDinner(philosophers));
         } catch (IOException e) {
             e.printStackTrace();
         }
