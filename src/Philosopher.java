@@ -78,11 +78,8 @@ public class Philosopher implements Runnable {
 
     public void setNextStatus() {
         if(this.status == PhilosopherStatus.EATING) {
-            this.setStatus(PhilosopherStatus.THINKING);
+            this.getDinner().putForks(this.getIndex());
         } else {
-            if(this.getStatus() != PhilosopherStatus.HUNGRY) {
-                this.setStatus(PhilosopherStatus.HUNGRY);
-            }
             this.getDinner().takeForks(this.getIndex());
         }
     }

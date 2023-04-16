@@ -15,7 +15,7 @@ public abstract class Dinner {
         this.philosophersArray = philosophersArray;
     }
 
-    private int nextPhilosopher(int philosopherIndex) {
+    public int nextPhilosopher(int philosopherIndex) {
         try {
             this.getPhilosophersArray().get(philosopherIndex + 1);
             return philosopherIndex + 1;
@@ -24,7 +24,7 @@ public abstract class Dinner {
         }
     }
 
-    private int prevPhilosopher(int philosopherIndex) {
+    public int prevPhilosopher(int philosopherIndex) {
         try {
             this.getPhilosophersArray().get(philosopherIndex - 1);
             return philosopherIndex - 1;
@@ -33,7 +33,7 @@ public abstract class Dinner {
         }
     }
 
-    private Enum<PhilosopherStatus> getPhilosopherStatus(int philosopherIndex) {
+    public Enum<PhilosopherStatus> getPhilosopherStatus(int philosopherIndex) {
         return this.getPhilosophersArray().get(philosopherIndex).getPhilosopher().getStatus();
     }
 
@@ -44,16 +44,8 @@ public abstract class Dinner {
     }
 
 
-    public Boolean testForks(int threadIndex) {
-        if (
-            this.getPhilosopherStatus(threadIndex) == PhilosopherStatus.HUNGRY && 
-            this.getPhilosopherStatus(this.nextPhilosopher(threadIndex)) != PhilosopherStatus.EATING &&
-            this.getPhilosopherStatus(this.prevPhilosopher(threadIndex)) != PhilosopherStatus.EATING
-        ) {
-            return true;
-        }
-        return false;
-    }
+    public abstract void testForks(int threadIndex);
+    
     public abstract void takeForks(int threadIndex);
 
     public abstract void putForks(int threadIndex);

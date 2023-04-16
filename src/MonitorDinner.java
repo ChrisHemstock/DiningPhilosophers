@@ -16,5 +16,11 @@ public class MonitorDinner extends Dinner{
     public void putForks(int threadIndex) {
 
     }
+
+    @Override
+    public void testForks(int threadIndex) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'testForks'");
+    }
     
 }

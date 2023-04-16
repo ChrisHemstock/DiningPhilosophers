@@ -7,11 +7,12 @@ public class SemaphoreDinner extends Dinner{
 
     public SemaphoreDinner(ArrayList<PhilosopherPanel> philosophersArray) {
         super(philosophersArray);
+        this.setForks(this.getPhilosophersArray().size());
     }
 
     public void setForks(int count) {
         this.forks = new ArrayList<Semaphore>();
-        for (int i = 0; i < this.getPhilosophersArray().size(); i++) {
+        for (int i = 0; i < count; i++) {
             this.getForks().add(new Semaphore(1));
         }
     }
@@ -20,31 +21,43 @@ public class SemaphoreDinner extends Dinner{
         return this.forks;
     }
 
+    @Override
     public void takeForks(int index) {
-        System.out.println("Semaphore Dinner");
-        System.out.println(this.getPhilosophersArray().get(0).getPhilosopher());
         try {
             mutex.acquire(); // enter critical region
-            if(this.testForks(index)) {
-                this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.EATING);
-            }
+            this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.HUNGRY);
+            this.testForks(index);
             mutex.release();
+            this.getForks().get(index).acquire();
         } catch (InterruptedException e) {
+            System.out.println("takeForks() index: " + index + " status: " + this.getPhilosopherStatus(index).name());
             e.printStackTrace();
-        }
-        
-        // // make philosopher hungry
-        // // attempt to accuire two 2 forks
-        // takeForksS.release();// leave critical region
-        // // block if the two forks were not aquired
-        
+        }      
     }
           
-         
-    public void putForks(int i) {
-        // enter critical region
-        // make philosopher thinking
-        // **check if left and right neighbor can eat 
-        // exit critical region
+    @Override  
+    public void putForks(int index) {
+        try {
+            mutex.acquire();
+            this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.THINKING);
+            this.testForks(this.prevPhilosopher(index));
+            this.testForks(this.nextPhilosopher(index));
+            mutex.release();
+        } catch (InterruptedException e) {
+            System.out.println("putForks() index: " + index + " status: " + this.getPhilosopherStatus(index).name());
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void testForks(int index) {
+        if (
+            this.getPhilosopherStatus(index) == PhilosopherStatus.HUNGRY && 
+            this.getPhilosopherStatus(this.nextPhilosopher(index)) != PhilosopherStatus.EATING &&
+            this.getPhilosopherStatus(this.prevPhilosopher(index)) != PhilosopherStatus.EATING
+        ) {
+            this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.EATING);
+            this.getForks().get(index).release(); // I dont get why this is a release and not an aquire
+        }
     }
 }
