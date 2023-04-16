@@ -84,10 +84,6 @@ public class Philosopher implements Runnable {
         }
     }
 
-    //going to have to create a thread and pass a philosopher into the thread and then run philosopher.start()
-    
-    
-
     public void setMsPerTick(long ms) {
         this.msPerTick = ms;
     }
@@ -97,6 +93,7 @@ public class Philosopher implements Runnable {
     }
 
     public void tick() {
+        System.out.println(this.getName() + " " + this.getRemainingTicks());
         this.setRemainingTicks(this.getRemainingTicks() - 1);
         if(this.getRemainingTicks() <= 0) {
             this.setNextStatus();

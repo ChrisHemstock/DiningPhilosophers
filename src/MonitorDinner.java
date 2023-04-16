@@ -8,19 +8,36 @@ public class MonitorDinner extends Dinner{
     }
 
     @Override
-    public void takeForks(int threadIndex) {
+    public synchronized void takeForks(int index) {
         System.out.println("Monitor Dinner");
+        this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.HUNGRY);
+        this.testForks(index);
+        if (this.getPhilosopherStatus(index) == PhilosopherStatus.HUNGRY) {
+            try {
+                this.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
-    public void putForks(int threadIndex) {
-
+    public synchronized void putForks(int index) {
+        this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.THINKING);
+        this.testForks(this.prevPhilosopher(index));
+        this.testForks(this.nextPhilosopher(index));
     }
 
     @Override
-    public void testForks(int threadIndex) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'testForks'");
+    public synchronized void testForks(int index) {
+        if (
+            this.getPhilosopherStatus(index) == PhilosopherStatus.HUNGRY && 
+            this.getPhilosopherStatus(this.nextPhilosopher(index)) != PhilosopherStatus.EATING &&
+            this.getPhilosopherStatus(this.prevPhilosopher(index)) != PhilosopherStatus.EATING
+        ) {
+            this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.EATING);
+            this.notifyAll();
+        }
     }
     
 }
