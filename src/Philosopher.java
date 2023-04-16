@@ -50,6 +50,10 @@ public class Philosopher implements Runnable {
 
     public void setStatus(PhilosopherStatus status) {
         this.status = status;
+        if(this.status == PhilosopherStatus.EATING || this.status == PhilosopherStatus.THINKING) {
+            Random rand = new Random();
+            this.setRemainingTicks(rand.nextInt(15));
+        }
         if(observer != null) {
             observer.notifyStatusChange(status);
         }
@@ -73,15 +77,13 @@ public class Philosopher implements Runnable {
     }
 
     public void setNextStatus() {
-        Random rand = new Random();
         if(this.status == PhilosopherStatus.EATING) {
             this.setStatus(PhilosopherStatus.THINKING);
-            this.setRemainingTicks(rand.nextInt(15));
-        } else if(this.status == PhilosopherStatus.THINKING) {
-            this.setStatus(PhilosopherStatus.HUNGRY);
+        } else {
+            if(this.getStatus() != PhilosopherStatus.HUNGRY) {
+                this.setStatus(PhilosopherStatus.HUNGRY);
+            }
             this.getDinner().takeForks(this.getIndex());
-            this.setStatus(PhilosopherStatus.EATING);
-            this.setRemainingTicks(rand.nextInt(15));
         }
     }
 

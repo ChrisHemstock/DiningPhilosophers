@@ -206,7 +206,7 @@ public class PhilosopherFrame {
         }
         
         this.philosopherView = new JPanel(new GridLayout(4, 5));
-        int[] seats = {2, 5, 9, 16, 18};
+        int[] seats = {2, 9, 18, 16, 5};
         for(int i = 0; i < 20; i++) {
             for(int j = 0; j < seats.length; j++) {
                 if(seats[j] == i) {
