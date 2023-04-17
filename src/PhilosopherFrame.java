@@ -38,6 +38,7 @@ public class PhilosopherFrame {
     private JTextArea logMessages;
     //Philosopher panel
     private ArrayList<PhilosopherPanel> philosophers;
+    private ArrayList<ForkPanel> forks;
     private Dinner dinner;
     
 
@@ -71,7 +72,7 @@ public class PhilosopherFrame {
         final double minimum = 0.01;
         final double maximum = 50.00;
         final double stepSize = 0.25;
-        final int inputWidth = 50;
+        final int inputWidth = 70;
 
         this.tickSpinner = new JSpinner();
         this.ticksText = new JLabel("Ticks/s:");
@@ -200,21 +201,52 @@ public class PhilosopherFrame {
             philosophers.add(new PhilosopherPanel("Aristotle", this.logMessages, 2));
             philosophers.add(new PhilosopherPanel("Diogenes", this.logMessages, 3));
             philosophers.add(new PhilosopherPanel("Epicurus", this.logMessages, 4));
+            
             setDinner(new SemaphoreDinner(philosophers));
+            this.forks = new ArrayList<ForkPanel>();
+            forks.add(new ForkPanel(1, philosophers.get(0).getPhilosopher(), philosophers.get(4).getPhilosopher()));
+            forks.add(new ForkPanel(2, philosophers.get(1).getPhilosopher(), philosophers.get(0).getPhilosopher()));
+            forks.add(new ForkPanel(4, philosophers.get(4).getPhilosopher(), philosophers.get(3).getPhilosopher()));
+            forks.add(new ForkPanel(3, philosophers.get(2).getPhilosopher(), philosophers.get(1).getPhilosopher()));
+            forks.add(new ForkPanel(5, philosophers.get(3).getPhilosopher(), philosophers.get(2).getPhilosopher()));
+            
+            philosophers.get(0).getPhilosopher().setLeftForkObserver(forks.get(1));
+            philosophers.get(0).getPhilosopher().setRightForkObserver(forks.get(0));
+            philosophers.get(1).getPhilosopher().setLeftForkObserver(forks.get(3));
+            philosophers.get(1).getPhilosopher().setRightForkObserver(forks.get(1));
+            philosophers.get(2).getPhilosopher().setLeftForkObserver(forks.get(4));
+            philosophers.get(2).getPhilosopher().setRightForkObserver(forks.get(3));
+            philosophers.get(3).getPhilosopher().setLeftForkObserver(forks.get(2));
+            philosophers.get(3).getPhilosopher().setRightForkObserver(forks.get(4));
+            philosophers.get(4).getPhilosopher().setLeftForkObserver(forks.get(0));
+            philosophers.get(4).getPhilosopher().setRightForkObserver(forks.get(2));
         } catch (IOException e) {
             e.printStackTrace();
         }
         
         this.philosopherView = new JPanel(new GridLayout(4, 5));
         int[] seats = {2, 9, 18, 16, 5};
+        int[] forkSpots = {1, 3, 10, 14, 17};
         for(int i = 0; i < 20; i++) {
+            Boolean found = false;
             for(int j = 0; j < seats.length; j++) {
                 if(seats[j] == i) {
                     philosopherView.add(this.philosophers.get(j));
+                    found = true;
                     break;
-                } else if(j == seats.length - 1) {
-                    philosopherView.add(new JPanel());
                 }
+            }
+            if(!found) {
+                for(int j = 0; j < forkSpots.length; j++) {
+                    if(forkSpots[j] == i) {
+                        philosopherView.add(this.forks.get(j));
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if(!found) {
+                philosopherView.add(new JPanel());
             }
         }
     }

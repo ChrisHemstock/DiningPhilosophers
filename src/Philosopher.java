@@ -13,6 +13,8 @@ public class Philosopher implements Runnable {
     private int remainingTicks;
     private long msPerTick;
     private PhilosopherObserver observer;
+    private PhilosopherObserver leftForkObserver;
+    private PhilosopherObserver rightForkObserver;
     private static Dinner dinner;
 
 
@@ -26,6 +28,14 @@ public class Philosopher implements Runnable {
 
     public void setObserver(PhilosopherObserver observer) {
         this.observer = observer;
+    }
+
+    public void setRightForkObserver(PhilosopherObserver observer) {
+        this.rightForkObserver = observer;
+    }
+
+    public void setLeftForkObserver(PhilosopherObserver observer) {
+        this.leftForkObserver = observer;
     }
 
     public void setDinner(Dinner dinner) {
@@ -56,6 +66,12 @@ public class Philosopher implements Runnable {
         }
         if(observer != null) {
             observer.notifyStatusChange(status);
+        }
+        if(leftForkObserver != null) {
+            leftForkObserver.notifyStatusChange(status);
+        }
+        if(rightForkObserver != null) {
+            rightForkObserver.notifyStatusChange(status);
         }
     }
 
