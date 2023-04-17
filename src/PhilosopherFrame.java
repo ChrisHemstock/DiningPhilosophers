@@ -28,7 +28,7 @@ public class PhilosopherFrame {
     private JPanel philosopherView;
     //Control panel
     private JPanel playControls;
-    private JButton playButton, resetButton, pauseButton;
+    private JButton playButton, resetButton;
     private JLabel ticksText;
     private JSpinner tickSpinner;
     private JButton submitTicksButton;
@@ -102,25 +102,29 @@ public class PhilosopherFrame {
 
         this.playControls = new JPanel();
         
-        this.playButton = new JButton("Play");
+        this.playButton = new JButton("Play/Pause");
         this.playButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                getDinner().start();
+                if(philosophers.get(0).getThread().isAlive()) {
+                    philosophers.get(0).getPhilosopher().switchPaused();
+                } else {
+                    getDinner().start();
+                }
+                
             }
         });
-        this.pauseButton = new JButton("Pause");
-        this.pauseButton.addActionListener(new ActionListener() {
+
+        this.resetButton = new JButton("Reset");
+        this.resetButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (PhilosopherPanel philosopher : philosophers) {
-                    philosopher.pauseThread();
-                }
+                philosophers.get(0).getPhilosopher().setPaused(true);
+                philosophers.get(0).getPhilosopher().getDinner().reset();
             }
             
         });
-        this.resetButton = new JButton("Reset");
         this.tickSpinnerInitialize();
         this.submitTicksButton = new JButton("Apply Ticks");
         this.submitTicksButton.addActionListener(new ActionListener() {
@@ -140,7 +144,6 @@ public class PhilosopherFrame {
         });
         
         this.playControls.add(this.playButton);
-        this.playControls.add(this.pauseButton);
         this.playControls.add(this.resetButton);
         this.playControls.add(this.ticksText);
         this.playControls.add(this.tickSpinner);
@@ -154,11 +157,19 @@ public class PhilosopherFrame {
         this.dinnerControls = new JPanel();
 
         this.semaphorButton = new JButton("Semaphore Dinner");
+        semaphorButton.setBackground(Color.WHITE);
+        semaphorButton.setForeground(Color.BLUE);
         this.semaphorButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                philosophers.get(0).getPhilosopher().setPaused(true);
+                philosophers.get(0).getPhilosopher().getDinner().reset();
                 setDinner(new SemaphoreDinner(philosophers));
+                semaphorButton.setBackground(Color.WHITE);
+                semaphorButton.setForeground(Color.BLUE);
+                monitorButton.setBackground(Color.GRAY);
+                monitorButton.setForeground(Color.WHITE);
             }
         });
         this.monitorButton = new JButton("Monitor Dinner");
@@ -166,7 +177,13 @@ public class PhilosopherFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                philosophers.get(0).getPhilosopher().setPaused(true);
+                philosophers.get(0).getPhilosopher().getDinner().reset();
                 setDinner(new MonitorDinner(philosophers));
+                monitorButton.setBackground(Color.WHITE);
+                monitorButton.setForeground(Color.BLUE);
+                semaphorButton.setBackground(Color.GRAY);
+                semaphorButton.setForeground(Color.WHITE);
             }
         });
         this.dinnerControls.add(this.semaphorButton);

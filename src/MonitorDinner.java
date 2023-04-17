@@ -36,7 +36,16 @@ public class MonitorDinner extends Dinner{
             this.getPhilosopherStatus(this.prevPhilosopher(index)) != PhilosopherStatus.EATING
         ) {
             this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.EATING);
-            this.notify();
+            this.notifyAll();
         }
+    }
+
+    @Override
+    public void reset() {
+        for (PhilosopherPanel philosopherPanel : getPhilosophersArray()) {
+            philosopherPanel.getPhilosopher().setStatus(PhilosopherStatus.THINKING);
+        }
+        getPhilosophersArray().get(0).clearLogMessages();
+        // this.notifyAll();
     }
 }

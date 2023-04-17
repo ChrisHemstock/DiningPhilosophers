@@ -16,7 +16,7 @@ public class PhilosopherPanel extends JPanel implements PhilosopherObserver {
     private JLabel pictureLabel;
     private JLabel nameLabel;
     private JLabel statusLabel;
-    private JTextArea log;
+    private static JTextArea log;
 
 
     
@@ -37,32 +37,37 @@ public class PhilosopherPanel extends JPanel implements PhilosopherObserver {
     }
 
     public void setLog(JTextArea log) {
-        this.log = log;
+        PhilosopherPanel.log = log;
     }
 
     public void setDinner(Dinner dinner) {
         getPhilosopher().setDinner(dinner);
     }
 
-    private void setPictureLabel() throws IOException {
+    private void setPictureLabel() {
         PhilosopherStatus status = this.philosopher.getStatus();
         BufferedImage image;
         
-        switch(status) {
-            case EATING:
-                image = ImageIO.read(new File("img/PhilosopherEating.png"));
-                break;
-            case HUNGRY:
-                image = ImageIO.read(new File("img/PhilosopherHungry.png"));
-                break;
-            case THINKING:
-                image = ImageIO.read(new File("img/PhilosopherThinking.png"));
-                break;
-            default:
-                throw new IOException();
+        try {
+            switch(status) {
+                case EATING:
+                    image = ImageIO.read(new File("img/PhilosopherEating.png"));
+                    break;
+                case HUNGRY:
+                    image = ImageIO.read(new File("img/PhilosopherHungry.png"));
+                    break;
+                case THINKING:
+                    image = ImageIO.read(new File("img/PhilosopherThinking.png"));
+                    break;
+                default:
+                    throw new IOException();
+            }
+            this.pictureLabel = new JLabel(new ImageIcon(image), SwingConstants.CENTER);
+            this.add(this.pictureLabel, BorderLayout.CENTER);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-        this.pictureLabel = new JLabel(new ImageIcon(image), SwingConstants.CENTER);
-        this.add(this.pictureLabel, BorderLayout.CENTER);
     }
 
     public Philosopher getPhilosopher() {
@@ -105,25 +110,38 @@ public class PhilosopherPanel extends JPanel implements PhilosopherObserver {
 
     @Override
     public void notifyStatusChange(PhilosopherStatus status) {
+        BorderLayout layout = (BorderLayout)this.getLayout();
         try {
-            BorderLayout layout = (BorderLayout)this.getLayout();
 
             this.remove(layout.getLayoutComponent(BorderLayout.CENTER));
             setPictureLabel();
             this.validate();
+        } catch (NullPointerException e) {
+            setPictureLabel();
+            this.validate();
+        } 
 
+        try {
             this.remove(layout.getLayoutComponent(BorderLayout.SOUTH));
             setStatusLabel();
             this.validate();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (NullPointerException e) {
+            setStatusLabel();
+            this.validate();
         }
     }
 
     public void addLogMessage(String msg) {
         try {
             this.getLog().append(msg + "\n");
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
+    public void clearLogMessages() {
+        try {
+            this.getLog().setText("Philosopher Log       \n");;
         } catch (Exception e) {
             // TODO: handle exception
         }

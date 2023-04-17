@@ -3,22 +3,22 @@ import java.util.concurrent.Semaphore;
 
 public class SemaphoreDinner extends Dinner{
     private Semaphore mutex = new Semaphore(1);
-    private ArrayList<Semaphore> forks;
+    private ArrayList<Semaphore> semPhilosophers;
 
     public SemaphoreDinner(ArrayList<PhilosopherPanel> philosophersArray) {
         super(philosophersArray);
-        this.setForks(this.getPhilosophersArray().size());
+        this.setSemPhilosophers(this.getPhilosophersArray().size());
     }
 
-    public void setForks(int count) {
-        this.forks = new ArrayList<Semaphore>();
+    public void setSemPhilosophers(int count) {
+        this.semPhilosophers = new ArrayList<Semaphore>();
         for (int i = 0; i < count; i++) {
-            this.getForks().add(new Semaphore(1));
+            this.getSemPhilosophers().add(new Semaphore(1));
         }
     }
 
-    public ArrayList<Semaphore> getForks() {
-        return this.forks;
+    public ArrayList<Semaphore> getSemPhilosophers() {
+        return this.semPhilosophers;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class SemaphoreDinner extends Dinner{
             this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.HUNGRY);
             this.testForks(index);
             mutex.release();
-            this.getForks().get(index).acquire();
+            this.getSemPhilosophers().get(index).acquire();
         } catch (InterruptedException e) {
             System.out.println("takeForks() index: " + index + " status: " + this.getPhilosopherStatus(index).name());
             e.printStackTrace();
@@ -57,7 +57,19 @@ public class SemaphoreDinner extends Dinner{
             this.getPhilosopherStatus(this.prevPhilosopher(index)) != PhilosopherStatus.EATING
         ) {
             this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.EATING);
-            this.getForks().get(index).release(); // I dont get why this is a release and not an aquire
+            this.getSemPhilosophers().get(index).release();
         }
+    }
+
+    @Override
+    public void reset() {
+        mutex.release();
+        for (Semaphore semaphore : semPhilosophers) {
+            semaphore.release();
+        }
+        for (PhilosopherPanel philosopherPanel : getPhilosophersArray()) {
+            philosopherPanel.getPhilosopher().setStatus(PhilosopherStatus.THINKING);
+        }
+        getPhilosophersArray().get(0).clearLogMessages();
     }
 }

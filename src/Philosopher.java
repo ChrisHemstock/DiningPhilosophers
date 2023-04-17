@@ -16,6 +16,7 @@ public class Philosopher implements Runnable {
     private PhilosopherObserver leftForkObserver;
     private PhilosopherObserver rightForkObserver;
     private static Dinner dinner;
+    private static Boolean paused = false;
 
 
     public Philosopher(String name, int index) {
@@ -24,6 +25,23 @@ public class Philosopher implements Runnable {
         setRemainingTicks(new Random().nextInt(15));
         setMsPerTick(500);
         setIndex(index);
+
+    }
+
+    public Boolean getPaused() {
+        return Philosopher.paused;
+    }
+
+    public void switchPaused() {
+        if(getPaused() == true) {
+            Philosopher.paused = false;
+        } else {
+            Philosopher.paused = true;
+        }
+    }
+
+    public void setPaused(Boolean state) {
+        Philosopher.paused = state;
     }
 
     public void setObserver(PhilosopherObserver observer) {
@@ -120,12 +138,17 @@ public class Philosopher implements Runnable {
     @Override
     public void run() {
         long before = System.currentTimeMillis();
+        long elapsedTime = 0;
         while(true) {
-            long time = System.currentTimeMillis() - before;
-            String check = time + ": " + this.getMsPerTick(); //even though this does nothing it is necessary to prevent getMsPerTick() from being cached
-            if(time > this.getMsPerTick()) {
+            while(!paused) {
+                elapsedTime = elapsedTime + System.currentTimeMillis() - before;
                 before = System.currentTimeMillis();
-                tick();
+                String check = elapsedTime + ": " + this.getMsPerTick(); //even though this does nothing it is necessary to prevent getMsPerTick() from being cached
+                if(elapsedTime > this.getMsPerTick()) { 
+                    tick();
+                    elapsedTime = 0;
+                    before = System.currentTimeMillis();
+                }
             }
         }
     }

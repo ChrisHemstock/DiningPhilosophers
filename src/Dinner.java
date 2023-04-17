@@ -50,4 +50,6 @@ public abstract class Dinner {
 
     public abstract void putForks(int threadIndex);
 
+    public abstract void reset();
+
 }
