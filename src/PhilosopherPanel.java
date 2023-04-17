@@ -90,10 +90,12 @@ public class PhilosopherPanel extends JPanel implements PhilosopherObserver {
     }
 
     public void pauseThread() {
-        
+        this.thread.interrupt();
     }
 
     public void resetThread() {
+
+        this.philosopher.setStatus(PhilosopherStatus.THINKING);
 
     }
 

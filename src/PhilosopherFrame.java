@@ -110,6 +110,16 @@ public class PhilosopherFrame {
             }
         });
         this.pauseButton = new JButton("Pause");
+        this.pauseButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (PhilosopherPanel philosopher : philosophers) {
+                    philosopher.pauseThread();
+                }
+            }
+            
+        });
         this.resetButton = new JButton("Reset");
         this.tickSpinnerInitialize();
         this.submitTicksButton = new JButton("Apply Ticks");

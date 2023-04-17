@@ -36,8 +36,7 @@ public class MonitorDinner extends Dinner{
             this.getPhilosopherStatus(this.prevPhilosopher(index)) != PhilosopherStatus.EATING
         ) {
             this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.EATING);
-            this.notifyAll();
+            this.notify();
         }
     }
-    
 }
