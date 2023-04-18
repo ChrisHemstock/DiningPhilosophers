@@ -109,7 +109,6 @@ public class PhilosopherFrame {
                 if(philosophers.get(0).getThread().isAlive()) {
                     philosophers.get(0).getPhilosopher().switchPaused();
                 } else {
-                    System.out.println("Start");
                     getDinner().start();
                 }
                 
@@ -134,8 +133,6 @@ public class PhilosopherFrame {
             public void actionPerformed(ActionEvent e) {
                 double ticksPerSec = (double) tickSpinner.getValue(); // t/s => 
                 int msPerTick = (int) (1000 / ticksPerSec);
-                System.out.println(ticksPerSec);
-                System.out.println(msPerTick);
 
                 for (PhilosopherPanel philosopher : philosophers) {
                     philosopher.getPhilosopher().setMsPerTick(msPerTick);

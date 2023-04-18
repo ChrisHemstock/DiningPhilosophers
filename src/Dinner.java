@@ -39,7 +39,6 @@ public abstract class Dinner {
 
     public void start() {
         for (PhilosopherPanel philosopher : philosophersArray) {
-            System.out.println("Thread start");
             philosopher.getThread().start();
         }
     }
