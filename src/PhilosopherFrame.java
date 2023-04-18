@@ -169,13 +169,13 @@ public class PhilosopherFrame {
                 setDinner(new SemaphoreDinner(philosophers));
                 semaphorButton.setBackground(Color.WHITE);
                 semaphorButton.setForeground(Color.BLUE);
-                monitorButton.setBackground(Color.GRAY);
-                monitorButton.setForeground(Color.WHITE);
+                monitorButton.setBackground(Color.DARK_GRAY);
+                monitorButton.setForeground(Color.GRAY);
             }
         });
         this.monitorButton = new JButton("Monitor Dinner");
-        monitorButton.setBackground(Color.GRAY);
-        monitorButton.setForeground(Color.WHITE);
+        monitorButton.setBackground(Color.DARK_GRAY);
+        monitorButton.setForeground(Color.GRAY);
         this.monitorButton.addActionListener(new ActionListener() {
 
             @Override
@@ -185,8 +185,8 @@ public class PhilosopherFrame {
                 setDinner(new MonitorDinner(philosophers));
                 monitorButton.setBackground(Color.WHITE);
                 monitorButton.setForeground(Color.BLUE);
-                semaphorButton.setBackground(Color.GRAY);
-                semaphorButton.setForeground(Color.WHITE);
+                semaphorButton.setBackground(Color.DARK_GRAY);
+                semaphorButton.setForeground(Color.GRAY);
             }
         });
         this.dinnerControls.add(this.semaphorButton);
