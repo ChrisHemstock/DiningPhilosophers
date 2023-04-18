@@ -109,6 +109,7 @@ public class PhilosopherFrame {
                 if(philosophers.get(0).getThread().isAlive()) {
                     philosophers.get(0).getPhilosopher().switchPaused();
                 } else {
+                    System.out.println("Start");
                     getDinner().start();
                 }
                 
@@ -173,6 +174,8 @@ public class PhilosopherFrame {
             }
         });
         this.monitorButton = new JButton("Monitor Dinner");
+        monitorButton.setBackground(Color.GRAY);
+        monitorButton.setForeground(Color.WHITE);
         this.monitorButton.addActionListener(new ActionListener() {
 
             @Override

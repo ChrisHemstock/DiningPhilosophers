@@ -137,6 +137,7 @@ public class Philosopher implements Runnable {
 
     @Override
     public void run() {
+        this.setPaused(false);
         long before = System.currentTimeMillis();
         long elapsedTime = 0;
         while(true) {

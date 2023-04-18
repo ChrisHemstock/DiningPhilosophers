@@ -9,8 +9,9 @@ public class MonitorDinner extends Dinner{
 
     @Override
     public synchronized void takeForks(int index) {
-        System.out.println("Monitor Dinner");
-        this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.HUNGRY);
+        if(this.getPhilosopherStatus(index) != PhilosopherStatus.HUNGRY) { //This is here to prevent repeated hungry messages due to busy waiting :(
+            this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.HUNGRY);
+        }
         this.testForks(index);
         if (this.getPhilosopherStatus(index) == PhilosopherStatus.HUNGRY) {
             try {
