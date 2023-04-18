@@ -23,30 +23,22 @@ public class SemaphoreDinner extends Dinner{
 
     @Override
     public void takeForks(int index) {
+        this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.HUNGRY);
+        this.testForks(index);
+        mutex.release();
         try {
-            mutex.acquire(); // enter critical region
-            this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.HUNGRY);
-            this.testForks(index);
-            mutex.release();
             this.getSemPhilosophers().get(index).acquire();
         } catch (InterruptedException e) {
-            System.out.println("takeForks() index: " + index + " status: " + this.getPhilosopherStatus(index).name());
             e.printStackTrace();
-        }      
+        }    
     }
           
     @Override  
     public void putForks(int index) {
-        try {
-            mutex.acquire();
-            this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.THINKING);
-            this.testForks(this.prevPhilosopher(index));
-            this.testForks(this.nextPhilosopher(index));
-            mutex.release();
-        } catch (InterruptedException e) {
-            System.out.println("putForks() index: " + index + " status: " + this.getPhilosopherStatus(index).name());
-            e.printStackTrace();
-        }
+        this.getPhilosophersArray().get(index).getPhilosopher().setStatus(PhilosopherStatus.THINKING);
+        this.testForks(this.prevPhilosopher(index));
+        this.testForks(this.nextPhilosopher(index));
+        mutex.release();
     }
 
     @Override
@@ -71,5 +63,19 @@ public class SemaphoreDinner extends Dinner{
             philosopherPanel.getPhilosopher().setStatus(PhilosopherStatus.THINKING);
         }
         getPhilosophersArray().get(0).clearLogMessages();
+    }
+
+    @Override
+    public void setNextStatus(int philosopherIndex) {
+        try {
+            mutex.acquire();
+            if(this.getPhilosopherStatus(philosopherIndex) == PhilosopherStatus.EATING) {
+                this.putForks(philosopherIndex);
+            } else {
+                this.takeForks(philosopherIndex);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

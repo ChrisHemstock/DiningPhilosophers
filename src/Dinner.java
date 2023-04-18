@@ -44,6 +44,7 @@ public abstract class Dinner {
         }
     }
 
+    public abstract void setNextStatus(int philosopherIndex);
 
     public abstract void testForks(int threadIndex);
     

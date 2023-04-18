@@ -110,14 +110,6 @@ public class Philosopher implements Runnable {
         return this.remainingTicks;
     }
 
-    public void setNextStatus() {
-        if(this.status == PhilosopherStatus.EATING) {
-            this.getDinner().putForks(this.getIndex());
-        } else {
-            this.getDinner().takeForks(this.getIndex());
-        }
-    }
-
     public void setMsPerTick(long ms) {
         this.msPerTick = ms;
     }
@@ -127,10 +119,10 @@ public class Philosopher implements Runnable {
     }
 
     public void tick() {
-        System.out.println(this.getName() + " " + this.getRemainingTicks());
+        // System.out.println(this.getName() + " " + this.getRemainingTicks());
         this.setRemainingTicks(this.getRemainingTicks() - 1);
         if(this.getRemainingTicks() <= 0) {
-            this.setNextStatus();
+            this.getDinner().setNextStatus(this.getIndex());
         }
         
     }
